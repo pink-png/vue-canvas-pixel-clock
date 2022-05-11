@@ -18,7 +18,7 @@ let valentine: boolean = true
 let msgTime: number
 let text: string
 let particleColor: string = 'hsla(0, 0%, 100%, 0.3)'
-let press: boolean = false
+let press: boolean = true
 let quiver: boolean = true
 let gradient: CanvasGradient
 
@@ -29,7 +29,7 @@ const init = () => {
   initcanvas(el)
   createparticles(el)
   FPS.initialize('canvas', 'fps');
-  loop()
+  // loop()
   // setInterval(loop, FRAME_RATE);
 }
 // 初始化画布
@@ -49,7 +49,7 @@ const createparticles = (el: HTMLElementTagNameMap['canvas']) => {
   for (let i = 0; i < PARTICLE_NUM; i++) {
     particles[i] = new Particle(el);
   }
-  console.log('粒子数组',particles)
+  console.log('粒子数组', particles)
 }
 
 // 例子类
@@ -120,10 +120,11 @@ let FPS = {
     this.totalTime += this.delta;
     this.frames++;
     this.updateFrames++;
-    this.updateTime = 0; // reset time
-    this.updateFrames = 0; // reset frames
     const elfpsID = document.getElementById(fpsID) as HTMLElement
     elfpsID.innerHTML = "FPS Average: " + Math.round(1000 * this.frames / this.totalTime) + " Current: " + Math.round(1000 * this.updateFrames / this.updateTime);
+    this.updateTime = 0; // reset time
+    this.updateFrames = 0; // reset frames
+
   }
 }
 
@@ -146,31 +147,30 @@ let loop = () => {
     } else {
       text = time.timeString;
     }
-    // valentine-ify it by setting hue to pink
+    // valentine-ify 通过将色调设置为粉色来增强色彩
     setStyles(300);
 
   } else if (updateColor === true && bgGrad === true) {
-    // changing color with time
-    // @TODO: come up with something better, this is a hacky implementation
-    var color = time.hours + time.minutes + time.seconds;
+    // 随着时间改变颜色
+    let color = time.hours + time.minutes + time.seconds;
     setStyles(color);
     text = time.timeString;
   } else {
     defaultStyles();
     text = time.timeString;
   }
-  console.log('数字文本------------',text)
+  console.log('数字文本------------', text)
   console.log('数字文本大小-----------', textSize)
 
   ctx_g.fillStyle = "rgb(255, 255, 255)";
   ctx_g.textBaseline = "middle";
   ctx_g.font = textSize + "px 'Avenir', 'Helvetica Neue', 'Arial', 'sans-serif'";
   ctx_g.fillText(text, (width - ctx_g.measureText(text).width) * 0.5, height * 0.5);
-  console.log('当前canvas元素',canvaselement)
+  console.log('当前canvas元素', canvaselement)
 
   // copy pixels
   var imgData = ctx_g.getImageData(0, 0, width, height);
-  console.log('imgData--------------',imgData)
+  console.log('imgData--------------', imgData)
 
   // clear canvas, again
   ctx_g.clearRect(0, 0, width, height);
@@ -195,22 +195,23 @@ let loop = () => {
 };
 
 const getTime = (amPM: boolean) => {
-  var date = new Date()
+  let date = new Date()
   let hours: any
   hours = date.getHours()
-  var timeOfDay = '';
+  let timeOfDay = '';
 
   if (amPM) {
     hours = (hours > 12) ? hours -= 12 : hours;
     hours = (hours == 0) ? 12 : hours;
   } else {
-    hours = pad(hours);   //bug------------------2
+    hours = pad(hours);
   }
 
-  var minutes = pad(date.getMinutes().toString());
-  var seconds = pad(date.getSeconds().toString());
+
+  let minutes = pad(date.getMinutes().toString());
+  let seconds = pad(date.getSeconds().toString());
   return {
-    hours: hours,
+    hours: hours.toString(),
     minutes: minutes,
     seconds: seconds,
     timeString: hours + " : " + minutes + " : " + seconds
@@ -239,12 +240,13 @@ const setStyles = (hue: number | string) => {
 
 let setGradient = (gradientStops: any) => {
 
-  // create gradient
-  console.log('111111', width)
+  // 创建渐变
+  // console.log('111111', width)
   gradient = ctx_g.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, width);
-  // console.log('11',gradient)
+  // console.log('gradient------',gradient)
+  // console.log('gradientStops-------',gradientStops)
 
-  // iterate through colorstops
+  // 遍历颜色停止
   for (let position in gradientStops) {
     let color = gradientStops[position];
     gradient.addColorStop(Number(position), color);
@@ -269,19 +271,21 @@ let defaultStyles = () => {
 
 // ImageDataSettings
 let particleText = (imgData: any) => {
-  console.log('11111111-----000')
-  var pxls = [];
-  for (var w = width; w > 0; w -= 6) {
-    for (var h = 0; h < width; h += 6) {
-      var index = (w + h * (width)) * 4;
+  console.log('width', width)
+  let pxls: number[][] = [];
+  for (let w = width; w > 0; w -= 6) {
+    for (let h = 0; h < width; h += 6) {
+      let index = (w + h * (width)) * 4;
+      console.log('index------', index)
       if (imgData.data[index] > 10) {
+        console.log('xxa')
         pxls.push([w, h]);
       }
     }
   }
- console.log('222222222-----000',pxls)
-  var count = pxls.length;
-  for (var i = 0; i < pxls.length && i < particles.length; i++) {
+  console.log('pxls----22222', pxls)
+  let count = pxls.length;
+  for (let i = 0; i < pxls.length && i < particles.length; i++) {
     console.log('444444---------')
     try {
       var p = particles[i],
@@ -316,7 +320,7 @@ let particleText = (imgData: any) => {
       p.py = p.y;
 
       p.inText = true;
-     console.log('33333333-----000')
+      console.log('33333333-----000')
       // draw the particle
       draw(p);
 
@@ -336,11 +340,11 @@ let particleText = (imgData: any) => {
     count--;
   }
 
-  console.log('绘制完成的数组---------',particles)
+  // console.log('绘制完成的数组---------',particles)
 };
 
+// 把粒子画到页面上去
 let draw = (p: Particle) => {
-  console.log('12312----------------')
   ctx_g.fillStyle = particleColor;
   ctx_g.beginPath();
   ctx_g.arc(p.x, p.y, p.size, 0, RADIUS, true);
@@ -351,26 +355,26 @@ let draw = (p: Particle) => {
 let explode = () => {
   for (let i = 0, l = particles.length; i < l; i++) {
     let p = particles[i];
-    console.log('p---------------------------',p)
     if (p.inText) {
-      var ax = mouse.x - p.px,
+      let ax = mouse.x - p.px,
         ay = mouse.y - p.py,
         angle = Math.atan2(ay, ax),
         polarity,
         C = Math.cos(angle),
         S = Math.sin(angle);
 
-      // change polarity
-      // attract particles if mouse pressed, repel if shift + mousedown
+      // 改变极性
+      // 按住鼠标时吸引粒子，按住shift+mousedown时排斥粒子
       polarity = (key.shift === true) ? -1 : 1;
 
       p.x += polarity * (Math.pow((C - 1), 2) - 1) + p.velocityX * p.delta;
       p.y += polarity * (Math.pow((S - 1), 2) - 1) + p.velocityY * p.delta;
 
-      // set previous positions
+      // 设置以前的位置
       p.px = p.x;
       p.py = p.y;
 
+      // console.log('准备把粒子画到页面上之前', p)
       draw(p);
     }
   }
@@ -392,4 +396,9 @@ onUpdated(() => {
 </template>
 
 <style scoped>
+canvas {
+  background: #222;
+  cursor: default;
+  z-index: 1;
+}
 </style>
