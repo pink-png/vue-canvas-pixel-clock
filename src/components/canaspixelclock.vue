@@ -24,19 +24,21 @@ let gradient: CanvasGradient
 
 // 初始化
 const init = () => {
-  const el = canvaselement.value
-  ctx_g = el.getContext("2d");
+  const el = canvaselement.value // canvas画布
+  ctx_g = el.getContext("2d") // 设置画笔 
   initcanvas(el)
   createparticles(el)
   FPS.initialize('canvas', 'fps');
-  // loop()
+  loop()
   // setInterval(loop, FRAME_RATE);
 }
 // 初始化画布
 const initcanvas = (el: HTMLElementTagNameMap['canvas'], width?: string, height?: string, bgc?: string) => {
   const inerwidth: string | number = window.innerWidth
   const inerheight: string | number = window.innerHeight
-  el.style.width = inerwidth as unknown + 'px'
+  // console.log('inerwidth',inerwidth)
+  // console.log('inerheight',inerheight)
+  el.style.width = inerwidth + 'px'
   el.style.height = inerheight as unknown + 'px'
   el.style.backgroundColor = bgc ? bgc.toString() : ''
   el.style.position = 'absolute'
@@ -49,7 +51,7 @@ const createparticles = (el: HTMLElementTagNameMap['canvas']) => {
   for (let i = 0; i < PARTICLE_NUM; i++) {
     particles[i] = new Particle(el);
   }
-  console.log('粒子数组', particles)
+  // console.log('粒子数组', particles)
 }
 
 // 例子类
@@ -128,10 +130,43 @@ let FPS = {
   }
 }
 
+const pad = (number: string) => {
+  return ('0' + number).substr(-2);
+};
+
+
+// 获取当前的时间
+const getTime = (amPM: boolean) => {
+  let date = new Date()
+  let hours: any
+  hours = date.getHours()
+
+  if (amPM) {
+    hours = (hours > 12) ? hours -= 12 : hours;
+    hours = (hours == 0) ? 12 : hours;
+  } else {
+    hours = pad(hours);
+  }
+
+  let minutes = pad(date.getMinutes().toString());
+  let seconds = pad(date.getSeconds().toString());
+  return {
+    hours: hours.toString(),
+    minutes: minutes,
+    seconds: seconds,
+    timeString: hours + " : " + minutes + " : " + seconds
+  };
+};
+
 // 生成帧动画
 let loop = () => {
   // clear out text
-  ctx_g.clearRect(0, 0, canvaselement.value.style.width, canvaselement.value.style.height);
+  console.log('canvaselement',canvaselement)
+  const elwidth = Number(canvaselement.value.style.width.replace('px',''))
+  const elheight = Number(canvaselement.value.style.height.replace('px',''))
+  // console.log('elwidth', elwidth)
+  // console.log('elheight', elheight)
+  ctx_g.clearRect(0, 0, elwidth, elheight) // 绘制矩形
 
   let time = getTime(true);
   console.log('time', time)
@@ -149,23 +184,29 @@ let loop = () => {
     }
     // valentine-ify 通过将色调设置为粉色来增强色彩
     setStyles(300);
-
+  console.log(111111111111)
   } else if (updateColor === true && bgGrad === true) {
     // 随着时间改变颜色
     let color = time.hours + time.minutes + time.seconds;
     setStyles(color);
     text = time.timeString;
+    console.log(22222222222)
   } else {
     defaultStyles();
     text = time.timeString;
+    console.log(33333333333)
   }
   console.log('数字文本------------', text)
   console.log('数字文本大小-----------', textSize)
-
+  console.log('画笔是否可用---------', ctx_g)
   ctx_g.fillStyle = "rgb(255, 255, 255)";
   ctx_g.textBaseline = "middle";
   ctx_g.font = textSize + "px 'Avenir', 'Helvetica Neue', 'Arial', 'sans-serif'";
-  ctx_g.fillText(text, (width - ctx_g.measureText(text).width) * 0.5, height * 0.5);
+  let widthposition = parseInt(((width - ctx_g.measureText(text).width) * 0.5).toString())
+  let heightposition = parseInt((height * 0.5).toString())
+  console.log('文字显示位置x', parseInt(((width - ctx_g.measureText(text).width) * 0.5).toString()))
+  console.log('文字显示位置y', parseInt((height * 0.5).toString()));
+  ctx_g.fillText(text, widthposition, heightposition);
   console.log('当前canvas元素', canvaselement)
 
   // copy pixels
@@ -192,34 +233,6 @@ let loop = () => {
     explode();
   }
   FPS.update('fps');
-};
-
-const getTime = (amPM: boolean) => {
-  let date = new Date()
-  let hours: any
-  hours = date.getHours()
-  let timeOfDay = '';
-
-  if (amPM) {
-    hours = (hours > 12) ? hours -= 12 : hours;
-    hours = (hours == 0) ? 12 : hours;
-  } else {
-    hours = pad(hours);
-  }
-
-
-  let minutes = pad(date.getMinutes().toString());
-  let seconds = pad(date.getSeconds().toString());
-  return {
-    hours: hours.toString(),
-    minutes: minutes,
-    seconds: seconds,
-    timeString: hours + " : " + minutes + " : " + seconds
-  };
-};
-
-const pad = (number: any) => {
-  return ('0' + number).substr(-2);
 };
 
 
@@ -286,7 +299,6 @@ let particleText = (imgData: any) => {
   console.log('pxls----22222', pxls)
   let count = pxls.length;
   for (let i = 0; i < pxls.length && i < particles.length; i++) {
-    console.log('444444---------')
     try {
       var p = particles[i],
         X,
@@ -320,7 +332,7 @@ let particleText = (imgData: any) => {
       p.py = p.y;
 
       p.inText = true;
-      console.log('33333333-----000')
+
       // draw the particle
       draw(p);
 
@@ -384,7 +396,6 @@ onMounted(() => {
   init()
 })
 onUpdated(() => {
-
 });
 
 </script>
