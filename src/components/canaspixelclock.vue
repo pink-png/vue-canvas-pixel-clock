@@ -161,9 +161,9 @@ const getTime = (amPM: boolean) => {
 // 生成帧动画
 let loop = () => {
   // clear out text
-  console.log('canvaselement',canvaselement)
-  const elwidth = Number(canvaselement.value.style.width.replace('px',''))
-  const elheight = Number(canvaselement.value.style.height.replace('px',''))
+  console.log('canvaselement', canvaselement)
+  const elwidth = Number(canvaselement.value.style.width.replace('px', ''))
+  const elheight = Number(canvaselement.value.style.height.replace('px', ''))
   // console.log('elwidth', elwidth)
   // console.log('elheight', elheight)
   ctx_g.clearRect(0, 0, elwidth, elheight) // 绘制矩形
@@ -184,7 +184,7 @@ let loop = () => {
     }
     // valentine-ify 通过将色调设置为粉色来增强色彩
     setStyles(300);
-  console.log(111111111111)
+    console.log(111111111111)
   } else if (updateColor === true && bgGrad === true) {
     // 随着时间改变颜色
     let color = time.hours + time.minutes + time.seconds;
