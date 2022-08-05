@@ -1,44 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted, onUpdated } from 'vue'
-import HTMLElementTagNameMap from '../Domtype/DOM'
-import { Particle, Pixelclock } from '../Class/index'
+import { Pixelclock } from '../Class/index'
 
 // ref直接定义dom元素。直接const 定义即可
-// const text1 = ref()
-// const CanvasEl = ref()
-
-// 私有变量
 const CanvasEl = ref() // canvas元素
-// const ctx = ref() // 画笔
-// const bgGrad: boolean = true // 背景梯度 
-// let gradient: string // 渐变（背景）
-// const height: number = 400 // 画布高度
-// const key = { up: false, shift: false } // key presses
-// const particles: Array<Particle> = [] //粒子阵列
-// const particleColor = 'hsla(0, 0%, 100%, 0.3)' // 粒子颜色
-// const mouse = { x: 0, y: 0 } // 鼠标/触摸的位置
-// const press: boolean = false // 是否鼠标按下
-// const quiver: boolean = false// 是否抖动 
-// let text: string | number // 要从中复制像素的文本
-// const textSize: number = 140 // 初始文本大小
-// const valentine: boolean = false
-// const msgTime: number = 100 // 返回时钟前显示消息的时间
-// const updateColor: boolean = true // 是否随时间更新渐变/粒子的颜色？
-// const width: number = 800; // 画布宽度
-
-// // 常量
-// const FRAME_RATE = 20, // 每秒帧数目标
-//   MIN_WIDTH = 800, // 画布的最小宽度
-//   MIN_HEIGHT = 400, // 画布的最小高度
-//   PARTICLE_NUM = 600, // （最大）要生成的粒子数
-//   RADIUS = Math.PI * 2; // 粒子半径
-
 
 //操作dom元素还是跟vue2.x 一样需要在Mounted 生命周期里操作
 onMounted(() => {
  new Pixelclock(CanvasEl.value).init()
 })
-
 
 </script>
 

@@ -79,9 +79,6 @@ export class Pixelclock {
         }
         console.log('例子数组', this.particles)
 
-        // // show FPS
-        // FPS.initialize(canvas, 'fps');
-
         // // set defaults
         this.defaultStyles();
 
@@ -89,6 +86,7 @@ export class Pixelclock {
         setInterval(this.loop, this.FRAME_RATE);
     }
 
+    // 初始化ui
     ui() {
         // UI: buttons and events
         var toggleOptions = document.getElementById('toggle-options') as HTMLElement,
@@ -290,7 +288,6 @@ export class Pixelclock {
         };
     };
 
-
     setStyles(hue: string | number) {
         // color stops
         var gradientStops = {
@@ -313,7 +310,6 @@ export class Pixelclock {
         this.canvaseContext.closePath();
         this.canvaseContext.fill();
     };
-
 
     particleText(imgData: any) {
         // console.log('imgData-----',imgData)
@@ -384,7 +380,6 @@ export class Pixelclock {
         }
     };
 
-
     explode() {
         for (let i = 0, l = this.particles.length; i < l; i++) {
             let p = this.particles[i];
@@ -414,11 +409,11 @@ export class Pixelclock {
         }
     };
 
-    // 动画循环
+
+    // 动画循环  这里必须使用箭头函数，不然this的指向会有问题
     loop = () => {
 
         // 清除文本
-        // console.log('this.canvaseContext',this.canvaseContext.clearRect)
 
         if (this.canvaseContext) {
             // (this.canvaselement.getContext('2d') as CanvasRenderingContext2D).clearRect(0, 0, this.width, this.height);
@@ -478,7 +473,5 @@ export class Pixelclock {
         } else {
             this.explode();
         }
-        // FPS.update('fps');
     };
-
 }

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import canaspixelclock from './components/canaspixelclock.vue'
-import canavstextVue from './components/canavstext.vue';
 import canvasclock from './components/canvasclock.vue'
 </script>
 
